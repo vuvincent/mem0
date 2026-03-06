@@ -1,6 +1,7 @@
 /// <reference types="jest" />
 import { VectorStoreFactory } from "../src/utils/factory";
 import { AzureAISearch } from "../src/vector_stores/azure_ai_search";
+import { OpenSearchDB } from "../src/vector_stores/opensearch";
 
 describe("VectorStoreFactory", () => {
   describe("create", () => {
@@ -31,6 +32,18 @@ describe("VectorStoreFactory", () => {
 
       expect(vectorStore).toBeDefined();
       expect(vectorStore.constructor.name).toBe("MemoryVectorStore");
+    });
+
+    it("should create OpenSearch vector store", () => {
+      const config = {
+        collectionName: "test-memories",
+        url: "http://localhost:9200",
+        embeddingModelDims: 1536,
+      };
+
+      const vectorStore = VectorStoreFactory.create("opensearch", config);
+
+      expect(vectorStore).toBeInstanceOf(OpenSearchDB);
     });
 
     it("should throw error for unsupported provider", () => {
